@@ -6,31 +6,41 @@
 #include <unistd.h>
 #include <windows.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int main()
 {
     int x, o,  b, y, n, k2048=0;
-    n=4;/////////////////////////ввод размеров матрицы
+    n=3;/////////////////////////ввод размеров матрицы
     o=n*n;
+    char X[1];
+    char *p1;
+    sf::RectangleShape** lst;
+    sf::Text** t;
+    t = new sf::Text*[n];
+    lst = new sf::RectangleShape*[n];
+    int** a;
+    a = new int*[n];
+    for ( int i = 0; i < n; i++){
+        a[i] = new int[n];
+        t[i] = new sf::Text [n];
+        lst[i] = new sf::RectangleShape [n];
+    }
     sf::Font font;
-    sf::Text t[n][n];
     sf::Text T;
     int p=400;
     font.loadFromFile("arial.ttf");
     int c;
-    int a[n][n];
+
     for(int i = 0; i < n; i++){
     for(int j = 0; j < n; j++){
             a[i][j]=0;
             }}
 
 
-
-
-
-
     sf::RenderWindow window(sf::VideoMode(400, 400), "SFML works!");
-    sf::RectangleShape lst[n][n];
+
+
     for(int i = 0; i < n; i++){
         for(int j = 0; j < n; j++){
             lst[i][j].setPosition(sf::Vector2f(10*4/n+100*i*4/n, 10*4/n+100*j*4/n));
@@ -215,7 +225,10 @@ int main()
 
     for(int i = 0; i < n; i++){
         for(int j = 0; j < n; j++){
-             t[i][j].setString((char) (a[j][i]+'0'));
+
+             p1 = itoa(a[i][j],X ,10);
+             t[j][i].setString(p1);
+
              t[i][j].setFont(font);
              t[i][j].setCharacterSize(30*4/n);
              t[i][j].setColor(sf::Color::White);
@@ -232,7 +245,7 @@ int main()
         window.clear();
         for(int i = 0; i < n; i++){
             for(int j = 0; j < n; j++){
-
+                lst[i][j].setFillColor(sf::Color(a[i][j]/4+10,a[i][j]/6+20, a[i][j]/13+30));
                 if (a[j][i] ==0){
                      t[i][j].setColor(sf::Color::Blue);
                 }
@@ -243,10 +256,13 @@ int main()
                     lst[i][j].setFillColor(sf::Color::Yellow);
                 }
                 if (a[j][i] ==4){
-                    lst[i][j].setFillColor(sf::Color::Red);
+                    lst[i][j].setFillColor(sf::Color(255, 140, 0));
                 }
                 if (a[j][i] ==8){
-                    lst[i][j].setFillColor(sf::Color::Green);
+                    lst[i][j].setFillColor(sf::Color(255, 69, 0));
+                }
+                if (a[j][i] ==16){
+                    lst[i][j].setFillColor(sf::Color(102, 205, 170));
                 }
                 window.draw(lst[i][j]);
                 window.draw(t[i][j]);
@@ -290,5 +306,14 @@ int main()
     }
     window.display();
     }
+    for (int i = 0; i < n; i++) {
+        free(a[i]);
+        free(lst[i]);
+		free(t[i]);
+	}
+	free(lst);
+	free(t);
+	free(a);
     return 0;
 }
+
